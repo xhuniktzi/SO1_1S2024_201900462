@@ -22,6 +22,7 @@ function App() {
         {studentData && <div>
           <p>Carnet: {studentData.carnet}</p>
           <p>Nombre: {studentData.nombre}</p>
+          <p>Hora: {new Date().toISOString()}</p>
         </div>}
       </header>
     </div>

@@ -12,13 +12,16 @@ COPY go.sum ./
 RUN go mod download
 
 # Copiar el código fuente del proyecto Go al directorio de trabajo
-COPY *.go ./
+COPY src/*.go ./
 
 # Compilar la aplicación Go
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Usar una imagen base mínima para la imagen final
 FROM alpine:latest  
+
+# Establecer la zona horaria
+ENV TZ America/Guatemala
 
 # Establecer el directorio de trabajo
 WORKDIR /root/

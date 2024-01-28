@@ -4,15 +4,18 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
 )
 
 type Student struct {
 	Carnet string `json:"carnet"`
 	Nombre string `json:"nombre"`
+
 }
 
 // Función para manejar el endpoint /data
 func dataHandler(w http.ResponseWriter, r *http.Request) {
+
 	student := Student{
 		Carnet: "201900462",
 		Nombre: "Xhunik Miguel",
