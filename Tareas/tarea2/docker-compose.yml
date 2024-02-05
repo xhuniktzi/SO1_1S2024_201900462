@@ -5,6 +5,8 @@ services:
     build: ./api-node
     ports:
       - "3000:3000"
+    networks:
+      - mynetwork
     depends_on:
       - mongo
 
@@ -21,6 +23,12 @@ services:
       - mongo-data:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - mynetwork
 
 volumes:
   mongo-data:
+
+networks:
+  mynetwork:
+    external: true

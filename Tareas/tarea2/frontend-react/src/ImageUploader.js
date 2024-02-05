@@ -25,7 +25,7 @@ function ImageUploader() {
 
         const base64 = await convertToBase64(selectedFile);
 
-        const url = 'http://localhost:3001/insertar'; // Sustituye esto con la URL real de tu API
+        const url = 'http://localhost:3000/insertar'; // Sustituye esto con la URL real de tu API
         const body = {
             foto_b64: base64
         };

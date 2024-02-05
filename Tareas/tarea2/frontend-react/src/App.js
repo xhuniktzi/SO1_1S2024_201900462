@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <h1>Subir y mostrar imagen con React</h1>
       <ImageUploader />
-      <ImageDisplay imageUrl="http://localhost:3001/leer" />
+      <ImageDisplay imageUrl="http://localhost:3000/leer" />
     </div>
     );
 }

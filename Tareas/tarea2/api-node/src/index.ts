@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 
 const app = express();
 const PORT = 3000;
-const MONGO_URL = 'mongodb://localhost:27017';
+const MONGO_URL = 'mongodb://mongo:27017';
 const mongo_client = new MongoClient(MONGO_URL);
 const DB_NAME = 'sopes1';
 
