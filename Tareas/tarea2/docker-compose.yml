@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  api:
+    build: ./api-node
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend-react
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+  mongo:
+    image: mongo
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongo-data:
