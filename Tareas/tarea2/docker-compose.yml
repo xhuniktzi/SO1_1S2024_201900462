@@ -1,9 +1,10 @@
 version: '3.8'
+
 services:
   api:
     build: ./api-node
     ports:
-      - "3001:3001"
+      - "3000:3000"
     depends_on:
       - mongo
 

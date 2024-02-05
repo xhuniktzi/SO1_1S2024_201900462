@@ -4,7 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 
 const app = express();
-const PORT = 3001;
+const PORT = 3000;
 const MONGO_URL = 'mongodb://localhost:27017';
 const mongo_client = new MongoClient(MONGO_URL);
 const DB_NAME = 'sopes1';
@@ -42,6 +42,7 @@ app.post('/insertar', async (req: Request, res: Response) => {
         const result = await collection.insertOne(document);
         res.json({ message: 'Foto insertada correctamente', result });
     } catch (error: unknown) {
+        console.error(error);
         res.json({ message: 'Error al insertar la foto' });
     }
     finally {

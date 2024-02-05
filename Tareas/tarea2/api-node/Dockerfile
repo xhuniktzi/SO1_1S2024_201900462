@@ -20,8 +20,8 @@ RUN npm run build
 # Establecer la zona horaria
 ENV TZ America/Guatemala
 
-# Exponer el puerto 3001
-EXPOSE 3001
+# Exponer el puerto 3000
+EXPOSE 3000
 
 # Comando para ejecutar la aplicación
 CMD ["node", "build/index.js"]
