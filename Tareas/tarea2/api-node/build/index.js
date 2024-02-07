@@ -17,7 +17,7 @@ const mongodb_1 = require("mongodb");
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const app = (0, express_1.default)();
-const PORT = 3001;
+const PORT = 3000;
 const MONGO_URL = 'mongodb://localhost:27017';
 const mongo_client = new mongodb_1.MongoClient(MONGO_URL);
 const DB_NAME = 'sopes1';
@@ -50,6 +50,7 @@ app.post('/insertar', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.json({ message: 'Foto insertada correctamente', result });
     }
     catch (error) {
+        console.error(error);
         res.json({ message: 'Error al insertar la foto' });
     }
     finally {
