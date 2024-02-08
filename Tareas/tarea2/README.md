@@ -2,4 +2,4 @@
 
 ## Video
 
-[Video tarea 2](https://youtu.be/Zd9wDdP00x8)
+[Video tarea 2](https://youtu.be/EkZ-rDc5q4I)
