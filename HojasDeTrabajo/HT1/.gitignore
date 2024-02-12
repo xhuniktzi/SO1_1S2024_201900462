@@ -1,0 +1,30 @@
+# Archivos objeto y archivos temporales de compilación
+*.o
+*.ko
+*.mod.*
+*.symvers
+*.order
+*.cmd
+*.mod
+.tmp_versions/
+modules.order
+Module.symvers
+Module.markers
+
+# Carpetas y archivos generados por el editor
+*~
+.*.swp
+.*.swo
+*.sublime*
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos específicos del entorno de desarrollo
+/.ccls-cache/
+
+# Directorios de compilación específicos del kernel
+/build/
+
+# Ignorar archivos de configuración personal
+/.config
