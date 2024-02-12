@@ -15,8 +15,9 @@ static struct proc_dir_entry *archivo_proc;
 static int mostrar_memoria(struct seq_file *m, void *v) {
     struct sysinfo i;
     si_meminfo(&i);
-    seq_printf(m, "Memoria Libre: %lu KB\n", i.freeram * 4);
-    seq_printf(m, "Memoria Total: %lu KB\n", i.totalram * 4);
+    seq_printf(m, "{\"Libre\": %lu,", i.freeram * 4);
+    seq_printf(m, "\"Total\": %lu", i.totalram * 4);
+    seq_printf(m, "}");
     return 0;
 }
 
