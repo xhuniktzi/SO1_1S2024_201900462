@@ -5,7 +5,7 @@
 *.symvers
 *.order
 *.cmd
-*.mod
+*_module.mod
 .tmp_versions/
 modules.order
 Module.symvers
