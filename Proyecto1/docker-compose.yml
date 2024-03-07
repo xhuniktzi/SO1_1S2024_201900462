@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./broker-backend # Cambiado de api-node a api-golang
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - mysql # Cambiado de mongo a mysql
+
+  frontend:
+    build: ./monitor-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+  mysql: # Cambiado de mongo a mysql
+    image: mysql # Usando la imagen de MySQL
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql-data:/var/lib/mysql # Punto de montaje actualizado para MySQL
+    ports:
+      - "3306:3306" # Puerto por defecto de MySQL
+    environment: # Variables de entorno para configurar MySQL
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    networks:
+      - mynetwork
+
+volumes:
+  mysql-data: # Cambiado de mongo-data a mysql-data
+
+networks:
+  mynetwork:
+    external: true

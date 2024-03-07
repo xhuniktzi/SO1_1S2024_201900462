@@ -9,7 +9,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Xhunik Miguel");
-MODULE_DESCRIPTION("Descriptor de memoria CPU");
+MODULE_DESCRIPTION("Descriptor de CPU");
 MODULE_VERSION("1.0");
 
 static int write_to_proc(struct seq_file *m, void *v);
