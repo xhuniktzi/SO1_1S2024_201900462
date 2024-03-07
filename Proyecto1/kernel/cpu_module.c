@@ -44,7 +44,6 @@ static int write_to_proc(struct seq_file *m, void *v) {
     int running = 0, sleeping = 0, zombie = 0, stopped = 0;
     
     unsigned long before_total_cpu_usage, after_total_cpu_usage, total_cpu_usage = 0;
-
     unsigned int interval_us = 500000;
 
     before_total_cpu_usage = 0;
