@@ -6,6 +6,7 @@
 #include <linux/fs.h>
 #include <linux/sched.h>
 #include <linux/mm.h>
+#include <linux/delay.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Xhunik Miguel");
@@ -39,18 +40,27 @@ module_exit(module_end);
 static int write_to_proc(struct seq_file *m, void *v) {
     struct task_struct *task, *child_task;
     struct list_head *list;
-    unsigned long rss, total_cpu_time, total_usage = 0;
+    unsigned long rss = 0;
     int running = 0, sleeping = 0, zombie = 0, stopped = 0;
     
-    total_cpu_time = jiffies_to_msecs(get_jiffies_64());
-    
+    unsigned long before_total_cpu_usage, after_total_cpu_usage, total_cpu_usage = 0;
+
+    unsigned int interval_us = 500000;
+
+    before_total_cpu_usage = 0;
     for_each_process(task) {
-        unsigned long cpu_time = jiffies_to_msecs(task->utime + task->stime);
-        total_usage += cpu_time;
+        before_total_cpu_usage += task->utime + task->stime;
+    }
+    usleep_range(interval_us, interval_us + 1000);
+    after_total_cpu_usage = 0;
+    for_each_process(task) {
+        after_total_cpu_usage += task->utime + task->stime;
     }
 
-    seq_printf(m, "{\n\"Total_CPU_Time\":%lu,\n", total_cpu_time);
-    seq_printf(m, "\"CPU_Usage_Percentage\":%lu,\n", (total_usage * 100) / total_cpu_time);
+    total_cpu_usage = (after_total_cpu_usage-before_total_cpu_usage) * 10 / interval_us;
+    
+    seq_printf(m, "{\n\"Total_CPU_Time\":%lu,\n", total_cpu_usage);
+
     seq_printf(m, "\"Processes\":[\n");
 
     int first_entry = 1;
