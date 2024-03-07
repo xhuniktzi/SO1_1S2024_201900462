@@ -17,9 +17,10 @@ static int show_ram_info(struct seq_file *m, void *v)
     si_meminfo(&info_mem);
 
     total_ram = info_mem.totalram * info_mem.mem_unit >> 20;
-    used_ram = info_mem.freeram * info_mem.mem_unit + info_mem.bufferram * info_mem.mem_unit + info_mem.sharedram * info_mem.mem_unit >> 20;
+    free_ram = (info_mem.freeram * info_mem.mem_unit + info_mem.bufferram * info_mem.mem_unit + info_mem.sharedram * info_mem.mem_unit) >> 20;
+    used_ram = total_ram - free_ram;
     usage_percentage = (used_ram * 100) / total_ram;
-    free_ram = total_ram - used_ram;
+    
     seq_printf(m, "{\"TotalRAM\":%lu, \"UsedMemory\":%lu, \"UsagePercent\":%lu, \"FreeMemory\":%lu}", total_ram, used_ram, usage_percentage, free_ram);
     return 0;
 }
@@ -35,14 +36,14 @@ static struct proc_ops ram_proc_fops = {
 
 static int __init ram_module_init(void)
 {
-    proc_create("ram_info_module", 0, NULL, &ram_proc_fops);
+    proc_create("ram_so1_1s2024", 0, NULL, &ram_proc_fops);
     printk(KERN_INFO "RAM module loaded\n");
     return 0;
 }
 
 static void __exit ram_module_exit(void)
 {
-    remove_proc_entry("ram_info_module", NULL);
+    remove_proc_entry("ram_so1_1s2024", NULL);
 }
 
 module_init(ram_module_init);
