@@ -7,6 +7,7 @@
 #include <linux/sched.h>
 #include <linux/mm.h>
 #include <linux/delay.h>
+#include <linux/sched/loadavg.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Xhunik Miguel");
@@ -43,20 +44,12 @@ static int write_to_proc(struct seq_file *m, void *v) {
     unsigned long rss = 0;
     int running = 0, sleeping = 0, zombie = 0, stopped = 0;
     
-    unsigned long before_total_cpu_usage, after_total_cpu_usage, total_cpu_usage = 0;
-    unsigned int interval_us = 500000;
+    // LOAD_INT(avenrun[0]);
+    // LOAD_FRAC(avenrun[0]);
 
-    before_total_cpu_usage = 0;
-    for_each_process(task) {
-        before_total_cpu_usage += task->utime + task->stime;
-    }
-    usleep_range(interval_us, interval_us + 1000);
-    after_total_cpu_usage = 0;
-    for_each_process(task) {
-        after_total_cpu_usage += task->utime + task->stime;
-    }
+    unsigned long total_cpu_usage = 0;
+    total_cpu_usage = (avenrun[0] << 16) + (avenrun[1] >> 16);
 
-    total_cpu_usage = (after_total_cpu_usage-before_total_cpu_usage) * 10 / interval_us;
     
     seq_printf(m, "{\n\"Total_CPU_Time\":%lu,\n", total_cpu_usage);
 
