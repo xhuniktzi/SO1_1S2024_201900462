@@ -43,10 +43,6 @@ static int write_to_proc(struct seq_file *m, void *v) {
     struct list_head *list;
     unsigned long rss = 0;
     int running = 0, sleeping = 0, zombie = 0, stopped = 0;
-
-    // unsigned long total_cpu_usage = 0;
-    // total_cpu_usage = (avenrun[0] << 16) + (avenrun[1] >> 16);
-
     
     seq_printf(m, "{\n\"Total_CPU_Time\":%lu.%lu,\n", LOAD_INT(avenrun[0]), LOAD_FRAC(avenrun[0]));
 

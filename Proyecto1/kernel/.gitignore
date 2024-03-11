@@ -1,5 +1,6 @@
 # Archivos objeto y archivos temporales de compilación
 *.o
+*.o.d
 *.ko
 *.mod.*
 *.symvers
