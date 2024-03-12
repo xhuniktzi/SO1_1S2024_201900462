@@ -12,7 +12,7 @@ COPY go.sum ./
 RUN go mod download
 
 # Copiar el código fuente del proyecto Go al directorio de trabajo
-COPY src/*.go ./
+COPY . .
 
 # Compilar la aplicación Go
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
