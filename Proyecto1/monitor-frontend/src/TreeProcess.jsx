@@ -1,5 +1,7 @@
 import { graphviz } from 'd3-graphviz'
-import { React, useEffect, useState } from 'react'
+import { React, useEffect, useState, useRef } from 'react'
+import { Chart, PieController, ArcElement, Tooltip, Legend } from 'chart.js';
+Chart.register(PieController, ArcElement, Tooltip, Legend);
 
 const recursiveGenerateDot = (data) => {
     if (!data) {
@@ -51,6 +53,8 @@ const recursiveFindPidLayer0 = (pid, data) => {
 const TreeProcess = () => {
     const [data, setData] = useState([])
     const [dot, setDot] = useState('')
+
+
 
     const fetchData = async () => {
         const response = await fetch('http://localhost:8080/cpu')
