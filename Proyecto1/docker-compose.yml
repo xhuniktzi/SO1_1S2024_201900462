@@ -26,7 +26,7 @@ services:
       - "3306:3306" # Puerto por defecto de MySQL
     environment: # Variables de entorno para configurar MySQL
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mydatabase
+      MYSQL_DATABASE: monitor
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     networks:
