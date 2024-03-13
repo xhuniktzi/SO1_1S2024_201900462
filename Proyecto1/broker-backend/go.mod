@@ -1,4 +1,4 @@
-module proyecto1
+module broker-backend
 
 go 1.20
 
