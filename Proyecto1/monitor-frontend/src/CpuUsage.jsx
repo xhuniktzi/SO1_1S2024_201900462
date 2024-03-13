@@ -13,7 +13,7 @@ const CpuUsage = () => {
                 .then(response => response.json())
                 .then(data => {
                     const cpu_cores = 2;
-                    let usage = data.Total_CPU_Time / cpu_cores;;
+                    let usage = data.Total_CPU_Time / cpu_cores;
                     if (usage > 1) {
                         usage = 100;
                     } else {
