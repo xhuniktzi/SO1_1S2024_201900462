@@ -1,36 +1,20 @@
 package routes
 
 import (
+	"broker-backend/config"
 	"broker-backend/cors"
-	"database/sql"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"os/exec"
 
-	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
-var db *sql.DB
-
 func DataController(w http.ResponseWriter, r *http.Request) {
 	// Configuración de la conexión a la base de datos
-	var err error
-	cfg := mysql.Config{
-		User:                 "root",
-		Passwd:               "rootpassword",
-		Net:                  "tcp",
-		Addr:                 "mysql:3306",
-		DBName:               "monitor",
-		AllowNativePasswords: true,
-	}
-	db, err = sql.Open("mysql", cfg.FormatDSN())
-	if err != nil {
-		log.Fatal(err)
-	}
+	db := config.GetDb()
 
 	// Consulta para obtener los últimos 20 registros de la tabla CPU
 	rowsCPU, err := db.Query("SELECT * FROM (SELECT * FROM cpu ORDER BY id DESC LIMIT 20) sub ORDER BY id ASC")

@@ -1,8 +1,9 @@
 package main
 
 import (
+	"broker-backend/config"
 	"broker-backend/routes"
-	"database/sql"
+
 	"encoding/json"
 	"fmt"
 	"log"
@@ -10,29 +11,11 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
-var db *sql.DB
-
 func main() {
-
-	// Configuración de la conexión a la base de datos
-	var err error
-	cfg := mysql.Config{
-		User:                 "root",
-		Passwd:               "rootpassword",
-		Net:                  "tcp",
-		Addr:                 "mysql:3306",
-		DBName:               "monitor",
-		AllowNativePasswords: true,
-	}
-	db, err = sql.Open("mysql", cfg.FormatDSN())
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	config.OpenDB()
 	// Función periódica para insertar datos
 	go func() {
 		ticker := time.NewTicker(10 * time.Second) // Ajusta la duración según necesites
@@ -50,6 +33,7 @@ func main() {
 
 func insertarDatos() {
 	// Aquí va tu lógica para insertar datos en la base de datos
+	db := config.GetDb()
 	fmt.Println("Insertando datos...")
 	// Por ejemplo: db.Exec("INSERT INTO tabla (columna) VALUES (valor)")
 	cmd1 := exec.Command("cat", "/proc/ram_so1_1s2024")
