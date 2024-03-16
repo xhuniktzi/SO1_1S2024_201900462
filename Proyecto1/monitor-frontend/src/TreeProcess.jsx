@@ -1,5 +1,5 @@
 import { graphviz } from 'd3-graphviz'
-import { React, useEffect, useState, useRef } from 'react'
+import { React, useEffect, useState } from 'react'
 import { Chart, PieController, ArcElement, Tooltip, Legend } from 'chart.js';
 Chart.register(PieController, ArcElement, Tooltip, Legend);
 
@@ -20,20 +20,6 @@ const recursiveGenerateDot = (data) => {
     return dot
 }
 
-const recursiveFindPidLayer1 = (pid, data) => {
-    if (!data) {
-        return
-    }
-
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].PID == pid) {
-
-            return data[i]
-        } else {
-            recursiveFindPidLayer0(pid, data[i].Children)
-        }
-    }
-}
 const recursiveFindPidLayer0 = (pid, data) => {
 
     if (!data) {
@@ -45,7 +31,7 @@ const recursiveFindPidLayer0 = (pid, data) => {
 
             return data[i]
         } else {
-            recursiveFindPidLayer1(pid, data[i].Children)
+            recursiveFindPidLayer0(pid, data[i].Children)
         }
     }
 }
