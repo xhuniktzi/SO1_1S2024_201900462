@@ -9,7 +9,7 @@ const CpuUsage = () => {
     // Obtener datos de CPU cada 500 ms
     useEffect(() => {
         const interval = setInterval(() => {
-            fetch('http://localhost:8080/cpu')
+            fetch('/cpu')
                 .then(response => response.json())
                 .then(data => {
                     const cpu_cores = 2;
