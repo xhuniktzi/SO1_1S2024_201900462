@@ -16,6 +16,8 @@ services:
       - "80:80"
     depends_on:
       - api
+    networks:
+      - mynetwork
 
   mysql: # Cambiado de mongo a mysql
     image: mysql # Usando la imagen de MySQL

@@ -20,6 +20,9 @@ RUN npm run build
 # Usar Nginx para servir la aplicación
 FROM nginx:stable-alpine
 
+# Copiar la configuración de Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
 # Establecer la zona horaria
 ENV TZ America/Guatemala
 
