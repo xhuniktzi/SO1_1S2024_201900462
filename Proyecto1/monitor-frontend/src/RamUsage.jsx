@@ -9,7 +9,7 @@ const RamUsage = () => {
     // Obtener datos de RAM cada 500 ms
     useEffect(() => {
         const interval = setInterval(() => {
-            fetch('http://localhost:8080/ram')
+            fetch('/ram')
                 .then(response => response.json())
                 .then(data => {
                     setRamUsage({ used: data.UsagePercent, free: 100 - data.UsagePercent });

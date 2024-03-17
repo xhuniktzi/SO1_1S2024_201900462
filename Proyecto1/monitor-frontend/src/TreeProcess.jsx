@@ -43,7 +43,7 @@ const TreeProcess = () => {
 
 
     const fetchData = async () => {
-        const response = await fetch('http://localhost:8080/cpu')
+        const response = await fetch('/cpu')
         setData(await response.json())
 
         const pid = document.getElementById('pid').value

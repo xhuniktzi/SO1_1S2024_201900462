@@ -11,7 +11,7 @@ const ChartComponent = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/data');
+                const response = await fetch('/data');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

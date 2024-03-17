@@ -8,8 +8,6 @@ const ProcessSimulator = () => {
 
 
     useEffect(() => {
-
-
         let currentdot = "digraph {"
         switch (state) {
 
