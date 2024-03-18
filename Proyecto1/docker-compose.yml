@@ -3,6 +3,11 @@ version: '3.8'
 services:
   api:
     build: ./broker-backend # Cambiado de api-node a api-golang
+    privileged: true
+    volumes:
+      - type: bind
+        source: /proc
+        target: /proc
     ports:
       - "8080:8080"
     networks:
