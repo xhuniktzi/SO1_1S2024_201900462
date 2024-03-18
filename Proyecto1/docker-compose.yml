@@ -4,6 +4,7 @@ services:
   api:
     build: ./broker-backend # Cambiado de api-node a api-golang
     privileged: true
+    pid: host
     volumes:
       - type: bind
         source: /proc
