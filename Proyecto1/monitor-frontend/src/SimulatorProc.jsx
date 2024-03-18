@@ -51,16 +51,17 @@ const ProcessSimulator = () => {
         // setPid(newPid);
         fetch("/start", {
             method: "GET"
-        }).then((response) => {
-            setPid(parseInt(response));
-            setState('Running');
-        });
+        }).then(response => response.text())
+            .then(data => {
+                setPid(parseInt(data));
+                setState('Running');
+            })
         // setState('Running');
     };
 
     const killProcess = () => {
         // setState('Terminated');
-        fetch("/kill?pid="+pid, {
+        fetch("/kill?pid=" + pid, {
             method: "GET"
         }).then((response) => {
             setPid(0);
@@ -70,7 +71,7 @@ const ProcessSimulator = () => {
 
     const stopProcess = () => {
         // setState('Ready');
-        fetch("/stop?pid="+pid, {
+        fetch("/stop?pid=" + pid, {
             method: "GET"
         }).then((response) => {
             setState('Ready');
@@ -79,7 +80,7 @@ const ProcessSimulator = () => {
 
     const resumeProcess = () => {
         // setState('Running');
-        fetch("/resume?pid="+pid, {
+        fetch("/resume?pid=" + pid, {
             method: "GET"
         }).then((response) => {
             setState('Running');
