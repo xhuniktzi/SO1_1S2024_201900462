@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   api:
+    image: xhuniktzi/broker-backend:1
     build: ./broker-backend # Cambiado de api-node a api-golang
     privileged: true
     pid: host
@@ -17,6 +18,7 @@ services:
       - mysql # Cambiado de mongo a mysql
 
   frontend:
+    image: xhuniktzi/monitor-frontend:1
     build: ./monitor-frontend
     ports:
       - "80:80"
@@ -25,14 +27,16 @@ services:
     networks:
       - mynetwork
 
-  mysql: # Cambiado de mongo a mysql
+  mysql:
+    # Cambiado de mongo a mysql
     image: mysql # Usando la imagen de MySQL
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - mysql-data:/var/lib/mysql # Punto de montaje actualizado para MySQL
     ports:
       - "3306:3306" # Puerto por defecto de MySQL
-    environment: # Variables de entorno para configurar MySQL
+    environment:
+      # Variables de entorno para configurar MySQL
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: monitor
       MYSQL_USER: user
@@ -41,7 +45,8 @@ services:
       - mynetwork
 
 volumes:
-  mysql-data: # Cambiado de mongo-data a mysql-data
+  mysql-data:
+    # Cambiado de mongo-data a mysql-data
 
 networks:
   mynetwork:
