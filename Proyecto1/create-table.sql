@@ -2,7 +2,7 @@ ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'rootpassword';
 FLUSH PRIVILEGES;
 
 CREATE DATABASE monitor;
-USE DATABASE monitor;
+USE monitor;
 
 CREATE TABLE cpu (     id INT AUTO_INCREMENT PRIMARY KEY,     free DOUBLE NOT NULL,     used DOUBLE NOT NULL );
 CREATE TABLE ram (     id INT AUTO_INCREMENT PRIMARY KEY,     free DOUBLE NOT NULL,     used DOUBLE NOT NULL );
