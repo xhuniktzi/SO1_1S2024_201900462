@@ -47,24 +47,43 @@ const ProcessSimulator = () => {
 
     const createNewProcess = () => {
         // Aquí generas un nuevo PID y estableces el estado inicial del proceso
-        const newPid = Math.floor(Math.random() * 100000); // Un ejemplo simple de generación de PID
-        setPid(newPid);
-        setState('Running');
+        // const newPid = Math.floor(Math.random() * 100000); // Un ejemplo simple de generación de PID
+        // setPid(newPid);
+        fetch("/start", {
+            method: "GET"
+        }).then((response) => {
+            setPid(parseInt(response));
+            setState('Running');
+        });
+        // setState('Running');
     };
 
     const killProcess = () => {
-        setState('Terminated');
-
+        // setState('Terminated');
+        fetch("/kill?pid="+pid, {
+            method: "GET"
+        }).then((response) => {
+            setPid(0);
+            setState('Terminated');
+        });
     };
 
     const stopProcess = () => {
-        setState('Ready');
-
+        // setState('Ready');
+        fetch("/stop?pid="+pid, {
+            method: "GET"
+        }).then((response) => {
+            setState('Ready');
+        });
     };
 
     const resumeProcess = () => {
-        setState('Running');
-
+        // setState('Running');
+        fetch("/resume?pid="+pid, {
+            method: "GET"
+        }).then((response) => {
+            setState('Running');
+        });
     };
 
 

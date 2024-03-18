@@ -28,7 +28,7 @@ func StartSignal(w http.ResponseWriter, r *http.Request) {
 	// Obtener el comando con PID
 	process = cmd
 
-	fmt.Fprintf(w, "Proceso iniciado con PID: %d y estado en espera", process.Process.Pid)
+	fmt.Fprintf(w, "%d", process.Process.Pid)
 }
 
 func StopSignal(w http.ResponseWriter, r *http.Request) {
