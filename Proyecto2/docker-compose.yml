@@ -81,20 +81,20 @@ services:
       - so1-proyecto2
 
   # Grafana
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3000:3000"
-    depends_on:
-      - redis
-    networks:
-      - so1-proyecto2
-    volumes:
-      - grafana_data:/var/lib/grafana
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - redis
+  #   networks:
+  #     - so1-proyecto2
+  #   volumes:
+  #     - grafana_data:/var/lib/grafana
 
 volumes:
   mongodb_data:
-  grafana_data:
+  # grafana_data:
 
 networks:
   so1-proyecto2:
