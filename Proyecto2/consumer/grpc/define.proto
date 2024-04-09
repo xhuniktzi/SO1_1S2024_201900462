@@ -1,0 +1,21 @@
+// archivo.proto
+syntax = "proto3";
+
+option go_package = "./;grpc";
+
+package grpc;
+
+service GetInfo {
+  rpc ReturnInfo(RequestId) returns (ReplyInfo);
+}
+
+message RequestId {
+  string album = 1;
+  string year = 2;
+  string artist = 3;
+  string ranked = 4;
+}
+
+message ReplyInfo {
+  string info = 1;
+}
