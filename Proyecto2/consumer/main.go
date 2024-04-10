@@ -5,12 +5,14 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strconv"
 	"time"
 
 	pb "consumer/grpc"
 
-	"github.com/go-redis/redis"
+	"github.com/google/uuid"
+	"github.com/nitishm/go-rejson/v4"
+	"github.com/nitishm/go-rejson/v4/clients"
+	"github.com/redis/go-redis/v9"
 	"github.com/segmentio/kafka-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -30,11 +32,13 @@ func main() {
 	defer r.Close()
 
 	// Configuración de Redis
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "redis:6379", // Cambiar si es necesario
+		Password: "",           // no password set
+		DB:       0,            // use default DB
 	})
+	rh := rejson.NewReJSONHandler()
+	rh.SetGoRedisClientWithContext(context.Background(), clients.GoRedisClientConn(rdb))
 
 	// Configuración de MongoDB
 	clientOptions := options.Client().
@@ -79,19 +83,41 @@ func main() {
 			continue
 		}
 
-		// Guarda el mensaje en Redis
-		year, err := strconv.Atoi(requestId.Year)
+		// // Crea el objeto requestId a partir del mensaje deserializado
+		// requestIdObj := bson.M{
+		// 	"album":  requestId.Album,
+		// 	"year":   requestId.Year,
+		// 	"artist": requestId.Artist,
+		// 	"ranked": requestId.Ranked,
+		// }
+
+		// // Guarda el nuevo objeto requestId en el array JSON en Redis usando JSON.ARRAPPEND
+		// _, err = rh.JSONArrAppend("votes_array", ".", requestIdObj)
+		// if err != nil {
+		// 	log.Printf("Error al guardar en Redis: %v", err)
+		// 	continue
+		// }
+
+		uuid, err := uuid.NewRandom()
 		if err != nil {
-			log.Printf("Error al convertir el año a entero: %v", err)
+			log.Printf("Error al generar un UUID: %v", err)
 			continue
 		}
-		err = redisClient.HSet("votes", fmt.Sprintf("%d", year), fmt.Sprintf("%s|%s|%s|%s", requestId.Album, requestId.Artist, requestId.Ranked, requestId.Year)).Err()
+
+		data := fmt.Sprintf(`uuid: "%s", album: "%s", year: "%s", artist: "%s", ranked: %s`, uuid, requestId.Album, requestId.Year, requestId.Artist, requestId.Ranked)
+
+		_, err = rdb.LPush(context.Background(), "votes_list", data).Result()
+
 		if err != nil {
 			log.Printf("Error al guardar en Redis: %v", err)
+			continue
 		}
 
-		// Guarda el mensaje en MongoDB
-		_, err = collection.InsertOne(ctx, bson.M{
+		// Crea un nuevo contexto para la operación de inserción en MongoDB
+		insertCtx, insertCancel := context.WithTimeout(context.Background(), 5*time.Second)
+		// defer insertCancel()
+
+		_, err = collection.InsertOne(insertCtx, bson.M{
 			"album":  requestId.Album,
 			"year":   requestId.Year,
 			"artist": requestId.Artist,
@@ -102,8 +128,8 @@ func main() {
 			continue
 		}
 
-		// Store the pointer to requestId in a temporary variable before printing
-		tempRequestID := &requestId
-		fmt.Printf("Mensaje recibido y guardado: %+v\n", tempRequestID)
+		// Asegúrate de cancelar el contexto al final de la iteración
+		insertCancel()
+		fmt.Printf("Mensaje recibido y guardado: %+v\n", &requestId)
 	}
 }
