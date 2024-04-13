@@ -83,21 +83,6 @@ func main() {
 			continue
 		}
 
-		// // Crea el objeto requestId a partir del mensaje deserializado
-		// requestIdObj := bson.M{
-		// 	"album":  requestId.Album,
-		// 	"year":   requestId.Year,
-		// 	"artist": requestId.Artist,
-		// 	"ranked": requestId.Ranked,
-		// }
-
-		// // Guarda el nuevo objeto requestId en el array JSON en Redis usando JSON.ARRAPPEND
-		// _, err = rh.JSONArrAppend("votes_array", ".", requestIdObj)
-		// if err != nil {
-		// 	log.Printf("Error al guardar en Redis: %v", err)
-		// 	continue
-		// }
-
 		uuid, err := uuid.NewRandom()
 		if err != nil {
 			log.Printf("Error al generar un UUID: %v", err)

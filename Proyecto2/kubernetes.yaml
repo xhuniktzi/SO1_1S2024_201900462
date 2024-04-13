@@ -290,7 +290,7 @@ metadata:
     io.kompose.service: consumer
   name: consumer
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       io.kompose.service: consumer
@@ -389,11 +389,12 @@ metadata:
     io.kompose.service: golang-client
   name: golang-client
 spec:
+  type: LoadBalancer
   ports:
   - name: "8080"
     port: 8080
     targetPort: 8080
   selector:
     io.kompose.service: golang-client
-status:
-  loadBalancer: {}
+# status:
+#   loadBalancer: {}
