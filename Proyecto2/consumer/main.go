@@ -1,4 +1,3 @@
-// consumer/main.go
 package main
 
 import (
@@ -40,7 +39,7 @@ func main() {
 	rh := rejson.NewReJSONHandler()
 	rh.SetGoRedisClientWithContext(context.Background(), clients.GoRedisClientConn(rdb))
 
-	// Configuración de MongoDB
+	// Configuración de MongoDB para logs
 	clientOptions := options.Client().
 		ApplyURI("mongodb://mongodb:27017").
 		SetMaxPoolSize(200).                  // Mantiene el tamaño máximo del pool
@@ -64,14 +63,12 @@ func main() {
 		log.Fatalf("Failed to ping MongoDB: %v", err)
 	}
 
-	db := mongoClient.Database("votes")
-	collection := db.Collection("dataset-votes")
+	logsCollection := mongoClient.Database("logs").Collection("vote-logs")
 
 	for {
 		m, err := r.ReadMessage(context.Background())
 		if err != nil {
-
-			log.Printf("Error al leer un mensaje de Kafka: %v", err)
+			logMessage(ctx, logsCollection, "Error al leer un mensaje de Kafka", err)
 			continue
 		}
 
@@ -79,42 +76,37 @@ func main() {
 		var requestId pb.RequestId
 		err = proto.Unmarshal(m.Value, &requestId)
 		if err != nil {
-			log.Printf("Error al deserializar el mensaje de Kafka: %v", err)
+			logMessage(ctx, logsCollection, "Error al deserializar el mensaje de Kafka", err)
 			continue
 		}
 
 		uuid, err := uuid.NewRandom()
 		if err != nil {
-			log.Printf("Error al generar un UUID: %v", err)
+			logMessage(ctx, logsCollection, "Error al generar un UUID", err)
 			continue
 		}
 
 		data := fmt.Sprintf(`uuid: "%s", album: "%s", year: "%s", artist: "%s", ranked: %s`, uuid, requestId.Album, requestId.Year, requestId.Artist, requestId.Ranked)
-
 		_, err = rdb.LPush(context.Background(), "votes_list", data).Result()
-
 		if err != nil {
-			log.Printf("Error al guardar en Redis: %v", err)
+			logMessage(ctx, logsCollection, "Error al guardar en Redis", err)
 			continue
 		}
 
-		// Crea un nuevo contexto para la operación de inserción en MongoDB
-		insertCtx, insertCancel := context.WithTimeout(context.Background(), 5*time.Second)
-		// defer insertCancel()
-
-		_, err = collection.InsertOne(insertCtx, bson.M{
-			"album":  requestId.Album,
-			"year":   requestId.Year,
-			"artist": requestId.Artist,
-			"ranked": requestId.Ranked,
-		})
-		if err != nil {
-			log.Printf("Error al guardar en MongoDB: %v", err)
-			continue
-		}
-
-		// Asegúrate de cancelar el contexto al final de la iteración
-		insertCancel()
-		fmt.Printf("Mensaje recibido y guardado: %+v\n", &requestId)
+		logMessage(ctx, logsCollection, "Mensaje recibido y guardado", nil)
 	}
+}
+
+func logMessage(ctx context.Context, collection *mongo.Collection, message string, err error) {
+	logEntry := bson.M{
+		"timestamp": time.Now(),
+		"message":   message,
+		"error":     fmt.Sprint(err),
+	}
+
+	if _, err := collection.InsertOne(ctx, logEntry); err != nil {
+		log.Printf("Error al guardar log en MongoDB: %v", err)
+	}
+
+	log.Printf("%s: %v", message, fmt.Sprint(err))
 }
