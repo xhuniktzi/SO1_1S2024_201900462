@@ -1,6 +1,10 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
+import cors from 'cors';
+
+
+
 
 // Configura dotenv
 dotenv.config();
@@ -8,7 +12,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000; // Permite configurar el puerto también
 const uri = process.env.MONGO_URI || "mongodb://localhost:27017"; // Utiliza valor predeterminado si no se define en .env
-
+app.use(cors());
 // Cliente de MongoDB
 const client = new MongoClient(uri);
 

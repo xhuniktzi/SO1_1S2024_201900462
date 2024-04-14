@@ -15,11 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongodb_1 = require("mongodb");
 const dotenv_1 = __importDefault(require("dotenv"));
+const cors_1 = __importDefault(require("cors"));
 // Configura dotenv
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000; // Permite configurar el puerto también
 const uri = process.env.MONGO_URI || "mongodb://localhost:27017"; // Utiliza valor predeterminado si no se define en .env
+app.use((0, cors_1.default)());
 // Cliente de MongoDB
 const client = new mongodb_1.MongoClient(uri);
 app.get('/logs', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
