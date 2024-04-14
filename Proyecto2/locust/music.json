@@ -1,8 +1,86 @@
 [
     {
         "artist": "Muse",
-        "album": "the resistance",
-        "year": 2002,
+        "album": "The Resistance",
+        "year": 2009,
         "ranked": 5
+    },
+    {
+        "artist": "Muse",
+        "album": "Black Holes and Revelations",
+        "year": 2006,
+        "ranked": 4
+    },
+    {
+        "artist": "Muse",
+        "album": "Absolution",
+        "year": 2003,
+        "ranked": 3
+    },
+    {
+        "artist": "Muse",
+        "album": "Origin of Symmetry",
+        "year": 2001,
+        "ranked": 2
+    },
+    {
+        "artist": "Muse",
+        "album": "Showbiz",
+        "year": 1999,
+        "ranked": 1
+    },
+    {
+        "artist": "Muse",
+        "album": "The 2nd Law",
+        "year": 2012,
+        "ranked": 6
+    },
+    {
+        "artist": "Muse",
+        "album": "Drones",
+        "year": 2015,
+        "ranked": 7
+    },
+    {
+        "artist": "Muse",
+        "album": "Simulation Theory",
+        "year": 2018,
+        "ranked": 8
+    },
+    {
+        "artist": "Muse",
+        "album": "Will of the People",
+        "year": 2022,
+        "ranked": 9
+    },
+    {
+        "artist": "Radiohead",
+        "album": "OK Computer",
+        "year": 1997,
+        "ranked": 5
+    },
+    {
+        "artist": "Radiohead",
+        "album": "Kid A",
+        "year": 2000,
+        "ranked": 4
+    },
+    {
+        "artist": "Radiohead",
+        "album": "In Rainbows",
+        "year": 2007,
+        "ranked": 3
+    },
+    {
+        "artist": "Coldplay",
+        "album": "A Rush of Blood to the Head",
+        "year": 2002,
+        "ranked": 2
+    },
+    {
+        "artist": "Coldplay",
+        "album": "Viva la Vida or Death and All His Friends",
+        "year": 2008,
+        "ranked": 1
     }
 ]
