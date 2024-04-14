@@ -290,7 +290,7 @@ metadata:
     io.kompose.service: consumer
   name: consumer
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
       io.kompose.service: consumer
@@ -304,7 +304,13 @@ spec:
       containers:
       - image: xhuniktzi/proyecto2-consumer
         name: consumer
-        resources: {}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
       restartPolicy: Always
 status: {}
 ---
@@ -396,5 +402,35 @@ spec:
     targetPort: 8080
   selector:
     io.kompose.service: golang-client
-# status:
-#   loadBalancer: {}
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: consumer
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: public-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /insert
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /golang-client
+        pathType: Prefix
+        backend:
+          service:
+            name: golang-client
+            port:
+              number: 8080

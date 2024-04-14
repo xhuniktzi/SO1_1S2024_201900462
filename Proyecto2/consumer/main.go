@@ -104,7 +104,9 @@ func logMessage(ctx context.Context, collection *mongo.Collection, message strin
 		"error":     fmt.Sprint(err),
 	}
 
-	if _, err := collection.InsertOne(ctx, logEntry); err != nil {
+	insertCtx, insertCancel := context.WithTimeout(context.Background(), 1*time.Minute) // Aumentado de 5 segundos a 1 minuto
+	defer insertCancel()
+	if _, err := collection.InsertOne(insertCtx, logEntry); err != nil {
 		log.Printf("Error al guardar log en MongoDB: %v", err)
 	}
 
