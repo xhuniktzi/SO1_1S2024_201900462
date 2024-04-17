@@ -6,9 +6,9 @@ use std::time::Duration;
 #[derive(Debug, Deserialize, Serialize)]
 struct Data {
     album: String,
-    year: String,
+    year: i32,
     artist: String,
-    ranked: String,
+    ranked: i32,
 }
 
 #[derive(Debug)]
