@@ -395,7 +395,7 @@ metadata:
     io.kompose.service: golang-client
   name: golang-client
 spec:
-  type: LoadBalancer
+  # type: LoadBalancer
   ports:
   - name: "8080"
     port: 8080
