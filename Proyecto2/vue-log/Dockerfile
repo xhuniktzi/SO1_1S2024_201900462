@@ -16,7 +16,7 @@ RUN npm run build
 FROM nginx:stable-alpine as production-stage
 
 # Copiar la configuración personalizada de Nginx
-COPY nginx.conf /etc/nginx/nginx.conf
+# COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copiar archivos estáticos construidos
 COPY --from=build-stage /app/dist /usr/share/nginx/html
