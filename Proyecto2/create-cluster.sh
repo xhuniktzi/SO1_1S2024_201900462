@@ -1,5 +1,5 @@
 # init
-gcloud init
+  gcloud init --skip-diagnostics
 
 # kubecluster
 gcloud container clusters create sopes1-proyecto2-cluster --zone us-central1-c --machine-type e2-medium --num-nodes 1
@@ -27,5 +27,5 @@ docker build -t username/api .
 docker push username/api
 
 # create service
-gcloud run deploy node-log-sopes1-proy2 --image=docker.io/xhuniktzi/node-log --set-env-vars MONGO_URI="mongodb://34.16.119.90:27017" --platform managed --allow-unauthenticated
-gcloud run deploy vue-log-sopes1-proy2 --image=docker.io/xhuniktzi/vue-log --set-env-vars BACKEND_HOST="https://node-log-sopes1-proy2-vwzkqq533a-uc.a.run.app" --platform managed --allow-unauthenticated
+gcloud run deploy node-log-sopes1-proy2 --image=docker.io/xhuniktzi/node-log --set-env-vars MONGO_URI="mongodb://34.170.229.113:27017" --platform managed --allow-unauthenticated
+# gcloud run deploy vue-log-sopes1-proy2 --image=docker.io/xhuniktzi/vue-log --set-env-vars PROXY_URL="https://node-log-sopes1-proy2-vwzkqq533a-uc.a.run.app" --platform managed --allow-unauthenticated --port 80

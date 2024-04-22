@@ -41,7 +41,7 @@ export default defineComponent({
   methods: {
     async fetchLogs(): Promise<void> {
       try {
-        const response = await fetch('https://node-log-sopes1-proy2-vwzkqq533a-uc.a.run.app/logs')
+        const response = await fetch('/logs')
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
