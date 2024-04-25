@@ -1,11 +1,29 @@
-# Usar una imagen de Rust oficial como etapa de compilación
-FROM rust:1.67 as builder
+# Usa la imagen oficial de Rust como base
+FROM rust:latest as builder
+
+# Crea un directorio de trabajo dentro del contenedor
 WORKDIR /usr/src/app
+
+# Copia los archivos de tu aplicación al contenedor
 COPY . .
+
+# Compila la aplicación
 RUN cargo build --release
 
-# Etapa final
-FROM debian:bullseye-slim
-RUN apt-get update && apt-get install -y libssl1.1 ca-certificates && rm -rf /var/lib/apt/lists/*
+# Crea una nueva imagen ligera
+FROM ubuntu:latest
+
+# Instala las dependencias necesarias
+RUN apt-get update && apt-get install -y libssl-dev
+
+# Copia el binario compilado desde la imagen de compilación a la imagen final
 COPY --from=builder /usr/src/app/target/release/rust_producer /usr/local/bin/rust_producer
+
+# Exponer el puerto que utiliza tu aplicación
+EXPOSE 8081
+
+# Comando para ejecutar tu aplicación cuando se inicie el contenedor
 CMD ["rust_producer"]
+
+# docker build -t desconocido502/rust_producer .
+# docker run -p 8080:8080 desconocido502/rust_producer

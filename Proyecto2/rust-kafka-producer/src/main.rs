@@ -1,46 +1,62 @@
-use serde::{Serialize, Deserialize};
-use warp::{Filter, reject, Rejection, Reply};
-use rdkafka::{config::ClientConfig, producer::{FutureProducer, FutureRecord}};
-use std::time::Duration;
+use rocket::response::status::BadRequest;
+use rocket::serde::json::{json, Value as JsonValue};
+use rocket::serde::json::Json;
+use rocket::config::SecretKey;
+use rocket_cors::{AllowedOrigins, CorsOptions};
+use tiny_kafka::producer::{KafkaProducer, Message};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(rocket::serde::Deserialize)]
 struct Data {
+    artist: String,
     album: String,
     year: i32,
-    artist: String,
     ranked: i32,
 }
 
-#[derive(Debug)]
-struct KafkaErrorWrapper {
-    inner: rdkafka::error::KafkaError,
+#[rocket::post("/data", data = "<data>")]
+async fn receive_data(data: Json<Data>) -> Result<Json<JsonValue>, BadRequest<String>> {
+    let received_data = data.into_inner();
+    
+    let response = JsonValue::from(json!({
+        "message": format!("Received data: Name: {}, Album: {}, Year: {}, Rank: {}", received_data.artist, received_data.album, received_data.year, received_data.ranked)
+    }));
+
+    let msg_obj = JsonValue::from(json!({
+        "artist": received_data.artist,
+        "album": received_data.album,
+        "year": received_data.year,
+        "ranked": received_data.ranked,
+    }));
+    let msg_obj_string = msg_obj.to_string();
+    let msg = Message::new("msg", &msg_obj_string);
+    let producer = KafkaProducer::new("kafka:9092", None);
+    producer.send_message("vote-topic2", msg).await;
+
+    Ok(Json(response))
 }
 
-impl reject::Reject for KafkaErrorWrapper {}
-
-async fn insert_data(data: Data, producer: FutureProducer) -> Result<impl Reply, Rejection> {
-    let message = serde_json::to_string(&data).unwrap();
-    let record = FutureRecord::<(), _>::to("vote-topic")
-        .payload(&message);
-    match producer.send(record, Duration::from_secs(5)).await {
-        Ok(_) => Ok(warp::reply::json(&data)),
-        Err((e, _)) => Err(reject::custom(KafkaErrorWrapper { inner: e })),
-    }
-}
-
-#[tokio::main]
+#[rocket::main]
 async fn main() {
-    let producer: FutureProducer = ClientConfig::new()
-        .set("bootstrap.servers", "kafka:9092")
-        .create().unwrap();
+    let secret_key = SecretKey::generate(); // Genera una nueva clave secreta
 
-    let insert_route = warp::post()
-        .and(warp::path("insert"))
-        .and(warp::body::json())
-        .and(warp::any().map(move || producer.clone()))
-        .and_then(insert_data);
+    // Configuración de opciones CORS
+    let cors = CorsOptions::default()
+        .allowed_origins(AllowedOrigins::all())
+        .to_cors()
+        .expect("failed to create CORS fairing");
 
-    warp::serve(insert_route)
-        .run(([0, 0, 0, 0], 50051))
-        .await;
+    let config = rocket::Config {
+        address: "0.0.0.0".parse().unwrap(),
+        port: 8081,
+        secret_key: secret_key.unwrap(), // Desempaqueta la clave secreta generada
+        ..rocket::Config::default()
+    };
+
+    // Montar la aplicación Rocket con el middleware CORS
+    rocket::custom(config)
+        .attach(cors)
+        .mount("/", rocket::routes![receive_data])
+        .launch()
+        .await
+        .unwrap();
 }

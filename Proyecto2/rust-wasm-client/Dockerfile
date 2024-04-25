@@ -1,25 +1,12 @@
-# Etapa de compilación para WebAssembly
-FROM rust:1.73 as builder
+FROM rust:latest as builder
 WORKDIR /usr/src/app
-
-# Añadir el target para WebAssembly
-RUN rustup target add wasm32-unknown-unknown
-
-# Instalar wasm-bindgen CLI
-# Ensure this version matches the one in Cargo.toml
-ARG WASM_BINDGEN_VERSION=0.2.78
-RUN cargo install wasm-bindgen-cli --vers $WASM_BINDGEN_VERSION
-
-# Copiar todos los archivos necesarios para la compilación
 COPY . .
+RUN cargo build --release
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y libssl-dev
+COPY --from=builder /usr/src/app/target/release/rust_client /usr/local/bin/rust_client
+EXPOSE 8000
+CMD ["rust_client"]
 
-# Compilar el proyecto para WebAssembly
-RUN cargo build --target wasm32-unknown-unknown --release
-
-# Usar wasm-bindgen para generar los archivos necesarios para el navegador
-RUN wasm-bindgen target/wasm32-unknown-unknown/release/wasm_client.wasm --out-dir ./pkg --web
-
-# Etapa para servir los archivos con nginx
-FROM nginx:alpine
-COPY --from=builder /usr/src/app/pkg /usr/share/nginx/html
-COPY my_nginx.conf /etc/nginx/nginx.conf
+# docker build -t desconocido502/rust_client .
+# docker run -p 8000:8000 desconocido502/rust_client

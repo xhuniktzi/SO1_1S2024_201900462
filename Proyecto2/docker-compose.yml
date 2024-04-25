@@ -49,23 +49,23 @@ services:
       context: ./rust-kafka-producer # Asegúrate de que este camino es correcto
       dockerfile: Dockerfile
     ports:
-      - "50051:50051"
+      - "8081:8081"
     depends_on:
       - kafka
     networks:
       - so1-proyecto2
 
   # Client app en WASM
-  # wasm-client:
-  #   build:
-  #     context: ./rust-wasm-client  # Asegúrate de que este camino es correcto
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8081:80"  # Nginx en el contenedor expone el puerto 80
-  #   depends_on:
-  #     - rust-producer
-  #   networks:
-  #     - so1-proyecto2
+  wasm-client:
+    build:
+      context: ./rust-wasm-client  # Asegúrate de que este camino es correcto
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"  # Nginx en el contenedor expone el puerto 80
+    depends_on:
+      - rust-producer
+    networks:
+      - so1-proyecto2
 
   # Client app en Golang
   golang-client:
