@@ -1,4 +1,4 @@
-use rocket::{routes, serde::json::Json};
+use rocket::serde::json::Json;
 use rocket::post;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
@@ -13,7 +13,7 @@ struct Data {
     ranked: i32,
 }
 
-#[post("/send_data", data = "<data>")]
+#[post("/insert", data = "<data>")]
 async fn send_data(data: Json<Data>) -> String {
     let client = Client::new();
     //let server_url = "http://app_server:8080/data";
@@ -47,7 +47,7 @@ async fn main() {
     //rocket::build().mount("/", routes![send_data]).launch().await.unwrap();
     rocket::custom(config)
     .attach(cors)
-    .mount("/rust", rocket::routes![send_data])
+    .mount("/wasm", rocket::routes![send_data])
     .launch()
     .await
     .unwrap();

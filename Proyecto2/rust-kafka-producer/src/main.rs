@@ -13,7 +13,7 @@ struct Data {
     ranked: i32,
 }
 
-#[rocket::post("/data", data = "<data>")]
+#[rocket::post("/insert", data = "<data>")]
 async fn receive_data(data: Json<Data>) -> Result<Json<JsonValue>, BadRequest<String>> {
     let received_data = data.into_inner();
     
