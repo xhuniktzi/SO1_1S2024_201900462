@@ -68,7 +68,7 @@ func main() {
 	for {
 		m, err := r.ReadMessage(context.Background())
 		if err != nil {
-			logMessage(ctx, logsCollection, "Error al leer un mensaje de Kafka", err)
+			logMessage(logsCollection, "Error al leer un mensaje de Kafka", err)
 			continue
 		}
 
@@ -76,28 +76,28 @@ func main() {
 		var requestId pb.RequestId
 		err = proto.Unmarshal(m.Value, &requestId)
 		if err != nil {
-			logMessage(ctx, logsCollection, "Error al deserializar el mensaje de Kafka", err)
+			logMessage(logsCollection, "Error al deserializar el mensaje de Kafka", err)
 			continue
 		}
 
 		uuid, err := uuid.NewRandom()
 		if err != nil {
-			logMessage(ctx, logsCollection, "Error al generar un UUID", err)
+			logMessage(logsCollection, "Error al generar un UUID", err)
 			continue
 		}
 
 		data := fmt.Sprintf(`uuid: "%s", album: "%s", year: "%s", artist: "%s", ranked: %s`, uuid, requestId.Album, requestId.Year, requestId.Artist, requestId.Ranked)
 		_, err = rdb.LPush(context.Background(), "votes_list", data).Result()
 		if err != nil {
-			logMessage(ctx, logsCollection, "Error al guardar en Redis", err)
+			logMessage(logsCollection, "Error al guardar en Redis", err)
 			continue
 		}
 
-		logMessage(ctx, logsCollection, "Mensaje recibido y guardado", nil)
+		logMessage(logsCollection, "Mensaje recibido y guardado", error(nil))
 	}
 }
 
-func logMessage(ctx context.Context, collection *mongo.Collection, message string, err error) {
+func logMessage(collection *mongo.Collection, message string, err error) {
 	logEntry := bson.M{
 		"timestamp": time.Now(),
 		"message":   message,
