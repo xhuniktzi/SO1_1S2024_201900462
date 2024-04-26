@@ -100,31 +100,36 @@ func handleJSONMessage(m kafka.Message, rdb *redis.Client, logsCollection *mongo
 	cleanedMessage := strings.Trim(string(m.Value), "\"")
 	cleanedMessage = strings.ReplaceAll(cleanedMessage, `\"`, `"`)
 
-	log.Printf("Cleaned JSON message: %s", cleanedMessage)
+	for {
+		m, err := r.ReadMessage(context.Background())
+		if err != nil {
+			logMessage(logsCollection, "Error al leer un mensaje de Kafka", err)
+			continue
+		}
 
-	var data Data
-	if err := json.Unmarshal([]byte(cleanedMessage), &data); err != nil {
-		logMessage(logsCollection, "Error al deserializar el mensaje de Kafka (JSON)", err)
-		return
+		// Deserializa el mensaje de Kafka
+		var requestId pb.RequestId
+		err = proto.Unmarshal(m.Value, &requestId)
+		if err != nil {
+			logMessage(logsCollection, "Error al deserializar el mensaje de Kafka", err)
+			continue
+		}
+
+		uuid, err := uuid.NewRandom()
+		if err != nil {
+			logMessage(logsCollection, "Error al generar un UUID", err)
+			continue
+		}
+
+		data := fmt.Sprintf(`uuid: "%s", album: "%s", year: "%s", artist: "%s", ranked: %s`, uuid, requestId.Album, requestId.Year, requestId.Artist, requestId.Ranked)
+		_, err = rdb.LPush(context.Background(), "votes_list", data).Result()
+		if err != nil {
+			logMessage(logsCollection, "Error al guardar en Redis", err)
+			continue
+		}
+
+		logMessage(logsCollection, "Mensaje recibido y guardado", error(nil))
 	}
-	saveMessageData(rdb, logsCollection, data.Album, data.Artist, data.Ranked, data.Year)
-}
-
-func saveMessageData(rdb *redis.Client, logsCollection *mongo.Collection, album, artist string, ranked, year int) {
-	uuid, err := uuid.NewRandom()
-	if err != nil {
-		logMessage(logsCollection, "Error al generar un UUID", err)
-		return
-	}
-
-	data := fmt.Sprintf(`uuid: "%s", album: "%s", year: "%d", artist: "%s", ranked: "%d"`, uuid, album, year, artist, ranked)
-	_, err = rdb.LPush(context.Background(), "votes_list", data).Result()
-	if err != nil {
-		logMessage(logsCollection, "Error al guardar en Redis", err)
-		return
-	}
-
-	logMessage(logsCollection, "Mensaje recibido y guardado", nil)
 }
 
 func logMessage(collection *mongo.Collection, message string, err error) {

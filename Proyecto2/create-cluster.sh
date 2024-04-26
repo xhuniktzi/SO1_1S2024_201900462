@@ -27,5 +27,5 @@ docker build -t username/api .
 docker push username/api
 
 # create service
-gcloud run deploy node-log-sopes1-proy2 --image=docker.io/xhuniktzi/node-log --set-env-vars MONGO_URI="mongodb://34.170.229.113:27017" --platform managed --allow-unauthenticated
-# gcloud run deploy vue-log-sopes1-proy2 --image=docker.io/xhuniktzi/vue-log --set-env-vars PROXY_URL="https://node-log-sopes1-proy2-vwzkqq533a-uc.a.run.app" --platform managed --allow-unauthenticated --port 80
+gcloud run deploy node-log-sopes1-proy2 --image=docker.io/xhuniktzi/node-log:1 --set-env-vars MONGO_URI="mongodb://104.197.89.206:27017" --platform managed --allow-unauthenticated
+gcloud run deploy vue-log-sopes1-proy2 --image=docker.io/xhuniktzi/vue-log:1 --platform managed --allow-unauthenticated --port 80

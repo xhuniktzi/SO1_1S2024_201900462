@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	pb "golang-client/grpc"
@@ -17,10 +16,10 @@ import (
 )
 
 type Data struct {
-	Album  string `json:"album"`
-	Year   int    `json:"year"`
-	Artist string `json:"artist"`
-	Ranked int    `json:"ranked"`
+	Album string `json:"album"`
+	Year  string `json:"year"`
+	Name  string `json:"name"`
+	Rank  string `json:"rank"`
 }
 
 // Handler que recibe las peticiones REST y las convierte a llamadas gRPC.
@@ -45,9 +44,9 @@ func insertDataHandler(w http.ResponseWriter, r *http.Request) {
 	// Envía la petición al servidor gRPC y recibe la respuesta.
 	res, err := client.ReturnInfo(context.Background(), &pb.RequestId{
 		Album:  data.Album,
-		Year:   strconv.Itoa(data.Year),
-		Artist: data.Artist,
-		Ranked: strconv.Itoa(data.Ranked),
+		Year:   data.Year,
+		Artist: data.Name,
+		Ranked: data.Rank,
 	})
 	if err != nil {
 		log.Fatalf("Error al llamar al servicio gRPC: %v", err)

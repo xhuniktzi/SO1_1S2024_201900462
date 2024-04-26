@@ -278,7 +278,7 @@ spec:
         io.kompose.service: consumer
     spec:
       containers:
-      - image: xhuniktzi/proyecto2-consumer
+      - image: xhuniktzi/proyecto2-consumer:1
         name: consumer
         resources:
           requests:
@@ -308,7 +308,7 @@ spec:
         io.kompose.service: golang-producer
     spec:
       containers:
-      - image: xhuniktzi/proyecto2-golang-producer
+      - image: xhuniktzi/proyecto2-golang-producer:1
         name: golang-producer
         ports:
         - containerPort: 3001
@@ -351,7 +351,7 @@ spec:
         io.kompose.service: golang-client
     spec:
       containers:
-      - image: xhuniktzi/proyecto2-golang-client
+      - image: xhuniktzi/proyecto2-golang-client:1
         name: golang-client
         ports:
         - containerPort: 8080

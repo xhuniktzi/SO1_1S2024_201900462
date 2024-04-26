@@ -44,16 +44,16 @@ services:
     networks:
       - so1-proyecto2
 
-  rust-producer:
-    build:
-      context: ./rust-kafka-producer # Asegúrate de que este camino es correcto
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
-    depends_on:
-      - kafka
-    networks:
-      - so1-proyecto2
+  # rust-producer:
+  #   build:
+  #     context: ./rust-kafka-producer # Asegúrate de que este camino es correcto
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "50051:50051"
+  #   depends_on:
+  #     - kafka
+  #   networks:
+  #     - so1-proyecto2
 
   # Client app en WASM
   wasm-client:
@@ -105,12 +105,12 @@ services:
       - redis
     networks:
       - so1-proyecto2
-    volumes:
-      - grafana_data:/var/lib/grafana
+    # volumes:
+    #   - grafana_data:/var/lib/grafana
 
 volumes:
   mongodb_data:
-  grafana_data:
+  # grafana_data:
 
 networks:
   so1-proyecto2:

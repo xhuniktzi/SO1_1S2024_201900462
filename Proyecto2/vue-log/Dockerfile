@@ -16,23 +16,24 @@ RUN npm run build
 FROM nginx:stable-alpine as production-stage
 
 # Instala Nginx y gettext (para envsubst)
-RUN apk add --no-cache nginx gettext
+# RUN apk add --no-cache nginx gettext
 
 # Crea el directorio para los archivos de PID y de sesión de Nginx
-RUN mkdir -p /run/nginx
+# RUN mkdir -p /run/nginx
 
 # Copiar la configuración personalizada de Nginx
-COPY nginx.conf /etc/nginx/nginx.conf.template
+# COPY nginx.conf /etc/nginx/nginx.conf.template
 
 # Copiar archivos estáticos construidos
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
 # Crea un script para iniciar Nginx después de aplicar envsubst
-RUN echo "envsubst '\${PROXY_URL}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'" > /start.sh
+# RUN echo "envsubst '\${PROXY_URL}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'" > /start.sh
 
-RUN chmod +x /start.sh
+# RUN chmod +x /start.sh
 
 # Exponer el puerto 80 para el acceso HTTP
 EXPOSE 80
 
-CMD ["/start.sh"]
+# Iniciar Nginx
+CMD ["nginx", "-g", "daemon off;"]
